@@ -22,7 +22,7 @@ public struct PPRefreshScrollView<Content>: View where Content: View {
     
     public var body: some View {
         PPRefreshableScrollView(onRefresh: onRefresh, progress: { progress in
-            PPRefreshHeader(play: .constant(progress != .finishing))
+            PPRefreshHeader(play: .constant(progress != .waiting))
                 .frame(height: defaultRefreshThreshold)
         }, content: content)
     }

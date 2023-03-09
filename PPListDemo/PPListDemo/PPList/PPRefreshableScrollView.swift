@@ -15,7 +15,7 @@ public typealias OnRefresh = (@escaping RefreshCompleted) -> Void
 public let defaultRefreshThreshold: CGFloat = 89
 
 public enum RefreshState {
-    case waiting, primed, loading, finishing
+    case waiting, primed, loading
 }
 
 public typealias PPRefreshProgressBuilder<Progress: View> = (RefreshState) -> Progress
@@ -45,11 +45,10 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
     }
 
     public var body: some View {
-        
         PPOffsetableScrollView(axes: .vertical, showsIndicator: showsIndicators) { proxy in
             /// 在某些机型上 将Y直接设置给offset会造成SwiftUI循环刷新 这里尝试了很多次 确定为现在的逻辑
             let Y = proxy.y
-            if state == .loading || state == .finishing { // If we're already loading, ignore everything
+            if state == .loading { // If we're already loading, ignore everything
                 offset = Y
             } else {
                 if Y > threshold && state == .waiting {
@@ -59,12 +58,7 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
                     offset = Y
                     state = .loading
                     onRefresh {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                            self.state = .finishing
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            withAnimation { self.state = .waiting }
-                        }
+                        withAnimation { self.state = .waiting }
                     }
                 }
             }
@@ -75,11 +69,11 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
                         .foregroundColor(loadingViewBackgroundColor)
                         .frame(height: threshold)
                     progress(state)
-                }.offset(y: (state == .loading || state == .finishing) ? -max(0, offset) : -threshold)
+                }.offset(y: (state == .loading) ? -max(0, offset) : -threshold)
                     
                 content()
                     .alignmentGuide(.top) { _ in
-                        (state == .loading || state == .finishing) ? -threshold + max(0, offset) : 0
+                        (state == .loading) ? -threshold + max(0, offset) : 0
                     }
             }
         }
