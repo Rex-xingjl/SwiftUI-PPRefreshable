@@ -11,7 +11,7 @@ block style
 ```swift
 
 PPList(isRefreshing: $viewModel.model.isRefershing) {
-    contentBody // any
+    content
 } refreshAction: { completion in
     refreshFunction(completion)
 }
@@ -31,7 +31,6 @@ PPList(isRefreshing: $manager.model.isRefershing) {
 ```
 
 # Sight
-![screenRecord](https://user-images.githubusercontent.com/18180671/223914779-6fd4e144-e519-443c-ad39-2f3ab7bdae8f.gif)
 
 https://user-images.githubusercontent.com/18180671/223914857-adbf01a4-2f40-4fe7-bde6-9f0b18959b8d.mov
 
