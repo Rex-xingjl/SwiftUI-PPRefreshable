@@ -22,7 +22,7 @@ async style
 
 ```swift
 
-PPList(isRefreshing: $manager.model.isRefershing) {
+PPList(isRefreshing: $viewModel.model.isRefershing) {
    content
 } asyncRefreshAction: {
     await asyncRefreshFuction()
