@@ -16,7 +16,6 @@
 		C6054D7429A514B200A68271 /* PPRefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */; };
 		C6054D7529A514B200A68271 /* PPLottieImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6E29A514B200A68271 /* PPLottieImageView.swift */; };
 		C6054D7629A514B200A68271 /* PPRefreshHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6F29A514B200A68271 /* PPRefreshHeader.swift */; };
-		C6054D7729A514B200A68271 /* PPRefreshScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D7029A514B200A68271 /* PPRefreshScrollView.swift */; };
 		C6054D7829A514B200A68271 /* PPList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D7129A514B200A68271 /* PPList.swift */; };
 		C6054D7C29A514C000A68271 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D7929A514C000A68271 /* ListView.swift */; };
 		C6054D7D29A514C000A68271 /* ListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D7A29A514C000A68271 /* ListManager.swift */; };
@@ -35,7 +34,6 @@
 		C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPRefreshableScrollView.swift; sourceTree = "<group>"; };
 		C6054D6E29A514B200A68271 /* PPLottieImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPLottieImageView.swift; sourceTree = "<group>"; };
 		C6054D6F29A514B200A68271 /* PPRefreshHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPRefreshHeader.swift; sourceTree = "<group>"; };
-		C6054D7029A514B200A68271 /* PPRefreshScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPRefreshScrollView.swift; sourceTree = "<group>"; };
 		C6054D7129A514B200A68271 /* PPList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPList.swift; sourceTree = "<group>"; };
 		C6054D7929A514C000A68271 /* ListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		C6054D7A29A514C000A68271 /* ListManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListManager.swift; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 				C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */,
 				C6054D6E29A514B200A68271 /* PPLottieImageView.swift */,
 				C6054D6F29A514B200A68271 /* PPRefreshHeader.swift */,
-				C6054D7029A514B200A68271 /* PPRefreshScrollView.swift */,
 				C6054D7129A514B200A68271 /* PPList.swift */,
 			);
 			path = PPList;
@@ -263,7 +260,6 @@
 				C6054D7829A514B200A68271 /* PPList.swift in Sources */,
 				C6054D7429A514B200A68271 /* PPRefreshableScrollView.swift in Sources */,
 				C6054D7C29A514C000A68271 /* ListView.swift in Sources */,
-				C6054D7729A514B200A68271 /* PPRefreshScrollView.swift in Sources */,
 				C6054D5D29A5145C00A68271 /* PPListDemoApp.swift in Sources */,
 				C6054D7D29A514C000A68271 /* ListManager.swift in Sources */,
 				C6054D7629A514B200A68271 /* PPRefreshHeader.swift in Sources */,

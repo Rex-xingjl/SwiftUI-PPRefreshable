@@ -53,11 +53,15 @@ public struct PPList<Content>: View where Content: View {
     
     @available(iOS 14.0, *)
     var listBody: some View {
-        PPRefreshScrollView { completion in
+        PPRefreshableScrollView { completion in
             guard !isRefreshing else { completion(); return }
             refreshHandler(completion)
+        } progress: { progress in
+            PPRefreshHeader(play: .constant(progress != .finishing))
+                .frame(height: defaultRefreshThreshold)
         } content: {
             LazyVStack(spacing: .zero) {
+                fixStutter()  /// 解决某些情况下界面闪动问题 是个SwiftUI BUG
                 content()
             }
         }
@@ -102,5 +106,10 @@ public struct PPList<Content>: View where Content: View {
                 }
             }
         }
+    }
+    
+    private func fixStutter() -> some View {
+        /// https://stackoverflow.com/questions/66523786/swiftui-putting-a-lazyvstack-or-lazyhstack-in-a-scrollview-causes-stuttering-a
+        Rectangle().foregroundColor(.clear).frame(height: 1)
     }
 }

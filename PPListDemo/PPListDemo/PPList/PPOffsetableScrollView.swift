@@ -1,6 +1,6 @@
 //
 //  PPOffsetableScrollView.swift
-//  PPListDemo
+//  PPUI
 //
 //  Created by Rex on 2023/2/7.
 //
@@ -17,8 +17,9 @@ public struct PPOffsetPreferenceKey: PreferenceKey {
     public static func reduce(value: inout CGPoint, nextValue: () -> CGPoint) { }
 }
 
-fileprivate let OffsetSpaceName: String = "OffsetSpaceName"
+fileprivate let PPOffsetSpaceName: String = "OffsetSpaceName"
 
+@available(iOS 14.0, *)
 public struct PPOffsetableScrollView<T: View>: View {
 
     let axes: Axis.Set
@@ -38,20 +39,23 @@ public struct PPOffsetableScrollView<T: View>: View {
 
     public var body: some View {
         ScrollView(axes, showsIndicators: showsIndicator) {
-            GeometryReader { proxy in
-                Color.clear.preference(
-                    key: PPOffsetPreferenceKey.self,
-                    value: proxy.frame(in: .named(OffsetSpaceName)).origin
-                )
-            }.frame(width: 0, height: 0)
-            
-            content
+            /// ScrollView无法修改spacing content与GeometryReader存在默认间距8 所以这里增加VStack
+            VStack(spacing: 0) {
+                GeometryReader { proxy in
+                    Color.clear.preference(
+                        key: PPOffsetPreferenceKey.self,
+                        value: proxy.frame(in: .named(PPOffsetSpaceName)).origin
+                    )
+                }.frame(width: 0, height: 0)
+                
+                content
+            }
         }
-        .coordinateSpace(name: OffsetSpaceName)
+        .coordinateSpace(name: PPOffsetSpaceName)
         .onPreferenceChange(PPOffsetPreferenceKey.self) { offset in
-            /// 这里需要主线程回传 规避一些异常情况
-            DispatchQueue.main.async { onOffsetChanged(offset) }
+            /// 这里需要主线程回传 规避一些线程异常情况
+            Task { @MainActor in onOffsetChanged(offset) }
         }
-        
+        .ignoresSafeArea(.keyboard) /// 忽视其他界面弹起键盘导致的底部异常高度问题
     }
 }
