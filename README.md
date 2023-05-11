@@ -30,7 +30,7 @@ PPList(isRefreshing: $viewModel.model.isRefershing) {
 
 ```
 
-other view want to refreshable？
+other view wants to refreshable？
 
 ```swift
 
