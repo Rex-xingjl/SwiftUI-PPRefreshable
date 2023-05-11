@@ -34,10 +34,10 @@ other view wants to refreshable？
 
 ```swift
 
-LazyVGrid(columns: itemLayout, spacing: 0) {
-    gridContent(geo.size.width/CGFloat(itemCount))
-}.pp_refreshable($manager.model.isRefreshing) { back in
-    manager.requestFileList(back)
+LazyVGrid(columns: itemLayouts, spacing: 0) {
+    content
+}.pp_refreshable($viewModel.model.isRefershing) { completion in
+    refreshFunction(completion)
 }
 
 ```
