@@ -1,4 +1,4 @@
-# SwiftUI-PPList
+# SwiftUI-PPRefreshable
 
 可在iOS13+版本使用的带刷新功能的List（已在百万用户的项目中使用）
 
@@ -26,6 +26,18 @@ PPList(isRefreshing: $viewModel.model.isRefershing) {
    content
 } asyncRefreshAction: {
     await asyncRefreshFuction()
+}
+
+```
+
+other view want to refreshable？
+
+```swift
+
+LazyVGrid(columns: itemLayout, spacing: 0) {
+    gridContent(geo.size.width/CGFloat(itemCount))
+}.pp_refreshable($manager.model.isRefreshing) { back in
+    manager.requestFileList(back)
 }
 
 ```
