@@ -20,8 +20,6 @@ public struct PPList<Content>: View where Content: View {
     private var refreshAction: ((RefreshCompleted?) -> Void)?
     
     private var asyncRefreshAction: (@Sendable () async -> Void)?
-    
-    private let feedback = UIImpactFeedbackGenerator(style: .light)
  
     /// 带头部刷新的List
     /// - Parameter isRefreshing: 刷新的状态
@@ -52,62 +50,49 @@ public struct PPList<Content>: View where Content: View {
     }
     
     @available(iOS 14.0, *)
-    var listBody: some View {
-        PPRefreshableScrollView { completion in
-            guard !isRefreshing else { completion(); return }
-            refreshHandler(completion)
-        } progress: { progress in
-            PPRefreshHeader(play: .constant(progress != .finishing))
-                .frame(height: defaultRefreshThreshold)
-        } content: {
+    @ViewBuilder var listBody: some View {
+        if let refreshAction = refreshAction {
             LazyVStack(spacing: .zero) {
-                fixStutter()  /// 解决某些情况下界面闪动问题 是个SwiftUI BUG
+                fixStutter()
                 content()
+            }.pp_refreshable($isRefreshing) { completion in
+                refreshAction(completion)
+            }
+        } else {
+            LazyVStack(spacing: .zero) {
+                fixStutter()
+                content()
+            }.pp_refreshable($isRefreshing) {
+                await asyncRefreshAction?()
             }
         }
     }
     
     var listBody_iOS13: some View {
         List {
-            content()
+            content().listRowInsets(EdgeInsets())
         }
         .listStyle(.plain)
         .introspectTableView { table in
             if #available(iOS 15, *) { table.sectionHeaderTopPadding = 0 }
             table.separatorStyle = .none
+            table.tableFooterView = UIView()
         }
         .pullToRefresh(isShowing: $isRefreshing) {
-            refreshHandler(nil)
-        }
-    }
-    
-    func refreshHandler(_ completion: RefreshCompleted?) {
-        DispatchQueue.main.async {
-            debugPrint("[PPList] begin refreshing")
-            $isRefreshing.wrappedValue = true
-            feedback.impactOccurred()
-        }
-        
-        if let refreshAction = refreshAction {
-            refreshAction {
-                DispatchQueue.main.async {
-                    debugPrint("[PPList] end refreshing")
-                    $isRefreshing.wrappedValue = false
-                    completion?()
+            if let refreshAction = refreshAction {
+                refreshAction {
+                    Task { @MainActor in $isRefreshing.wrappedValue = false }
                 }
-            }
-        } else if let asyncRefreshAction = asyncRefreshAction {
-            Task {
-                await asyncRefreshAction()
-                await MainActor.run {
-                    debugPrint("[PPList] end refreshing")
-                    $isRefreshing.wrappedValue = false
-                    completion?()
+            } else if let asyncRefreshAction = asyncRefreshAction {
+                Task {
+                    await asyncRefreshAction()
+                    await MainActor.run { $isRefreshing.wrappedValue = false }
                 }
             }
         }
     }
     
+    /// 解决某些情况下界面闪动问题 是个SwiftUI BUG
     private func fixStutter() -> some View {
         /// https://stackoverflow.com/questions/66523786/swiftui-putting-a-lazyvstack-or-lazyhstack-in-a-scrollview-causes-stuttering-a
         Rectangle().foregroundColor(.clear).frame(height: 1)

@@ -22,6 +22,7 @@
 		C6054D7E29A514C000A68271 /* ListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D7B29A514C000A68271 /* ListModel.swift */; };
 		C698B4E529A5F01C0016FCD7 /* header_loading_dark.json in Resources */ = {isa = PBXBuildFile; fileRef = C698B4E429A5F01C0016FCD7 /* header_loading_dark.json */; };
 		C698B4E729A5F0220016FCD7 /* header_loading.json in Resources */ = {isa = PBXBuildFile; fileRef = C698B4E629A5F0210016FCD7 /* header_loading.json */; };
+		C6DBE28D2A0CAFEE00A9DD67 /* PPRefreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DBE28C2A0CAFEE00A9DD67 /* PPRefreshable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		C6054D7B29A514C000A68271 /* ListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListModel.swift; sourceTree = "<group>"; };
 		C698B4E429A5F01C0016FCD7 /* header_loading_dark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = header_loading_dark.json; sourceTree = "<group>"; };
 		C698B4E629A5F0210016FCD7 /* header_loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = header_loading.json; sourceTree = "<group>"; };
+		C6DBE28C2A0CAFEE00A9DD67 /* PPRefreshable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPRefreshable.swift; sourceTree = "<group>"; };
 		C9440B38D93BA7409830E49A /* Pods_PPListDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PPListDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE2BF78F1A76A86DE1881D89 /* Pods-PPListDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PPListDemo.debug.xcconfig"; path = "Target Support Files/Pods-PPListDemo/Pods-PPListDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		F03AAB2E61891AB17D95D61E /* Pods-PPListDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PPListDemo.release.xcconfig"; path = "Target Support Files/Pods-PPListDemo/Pods-PPListDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 		C6054D6A29A514B200A68271 /* PPList */ = {
 			isa = PBXGroup;
 			children = (
+				C6DBE28C2A0CAFEE00A9DD67 /* PPRefreshable.swift */,
 				C6054D6B29A514B200A68271 /* PPOffsetableScrollView.swift */,
 				C6054D6C29A514B200A68271 /* PullToRefresh.swift */,
 				C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */,
@@ -255,6 +258,7 @@
 			files = (
 				C6054D7229A514B200A68271 /* PPOffsetableScrollView.swift in Sources */,
 				C6054D7529A514B200A68271 /* PPLottieImageView.swift in Sources */,
+				C6DBE28D2A0CAFEE00A9DD67 /* PPRefreshable.swift in Sources */,
 				C6054D7329A514B200A68271 /* PullToRefresh.swift in Sources */,
 				C6054D7E29A514C000A68271 /* ListModel.swift in Sources */,
 				C6054D7829A514B200A68271 /* PPList.swift in Sources */,
