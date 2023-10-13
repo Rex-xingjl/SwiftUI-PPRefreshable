@@ -1,8 +1,8 @@
 # SwiftUI-PPRefreshable
 
-可在iOS13+版本使用的带刷新功能的List（已在百万用户的项目中使用）
+Available in iOS13+, add refreshable for view （using in a million-user APP）
 
-Available in iOS13+, refreshable List （using in a million-user APP）
+可在iOS13+版本使用的给视图添加刷新样式（已在百万用户的项目中使用）
 
 # How to use
 
