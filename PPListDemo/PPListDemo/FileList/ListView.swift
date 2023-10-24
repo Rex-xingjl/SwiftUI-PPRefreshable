@@ -30,6 +30,9 @@ struct ListView: View {
                 }
             }
         }
+        .onAppear {
+            manager.model.isRefershing = true
+        }
     }
     
     // MARK: - 回传方式：搭配block处理结束更自由 - BlockAction：Freedom and Sweet Air

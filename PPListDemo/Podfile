@@ -5,11 +5,9 @@ target 'PPListDemo' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  pod 'Introspect'
   pod 'SDWebImageSwiftUI'
   pod 'lottie-ios'
   pod 'SnapKit', '~> 5.6.0'
-  pod 'MJRefresh', '~> 3.5.0'
 
 end
 

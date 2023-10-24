@@ -28,7 +28,7 @@ public extension View {
     /// - Parameter refreshAction: 刷新方法 结束后回调block
     @ViewBuilder func pp_refreshable(_ isRefreshing: Binding<Bool>, showsIndicators: Bool = true, asyncRefreshAction: @escaping @Sendable () async -> Void) -> some View {
         modifier(PPRefreshable(isRefreshing: isRefreshing, showsIndicators: showsIndicators, progress: { state in
-            PPRefreshHeader(play: .constant(state != .finishing))
+            PPRefreshHeader(play: .constant(state.animating))
                 .frame(height: defaultRefreshThreshold)
         }, asyncRefreshAction: asyncRefreshAction))
     }
@@ -60,7 +60,7 @@ public struct PPRefreshable<Progress>: ViewModifier where Progress: View {
     }
 
     public func body(content: Content) -> some View {
-        PPRefreshableScrollView(showsIndicators: showsIndicators, loadingViewBackgroundColor: .clear, threshold: defaultRefreshThreshold) { completion in
+        PPRefreshableScrollView($isRefreshing, showsIndicators: showsIndicators, loadingViewBackgroundColor: .clear, threshold: defaultRefreshThreshold) { completion in
             guard !isRefreshing else { completion(); return }
             refreshHandler(completion)
         } progress: { state in
@@ -71,25 +71,16 @@ public struct PPRefreshable<Progress>: ViewModifier where Progress: View {
     }
     
     private func refreshHandler(_ completion: RefreshCompleted?) {
-        Task { @MainActor in
-            $isRefreshing.wrappedValue = true
-            feedback.impactOccurred()
-        }
+        feedback.impactOccurred()
         
         if let refreshAction = refreshAction {
             refreshAction {
-                Task { @MainActor in
-                    $isRefreshing.wrappedValue = false
-                    completion?()
-                }
+                Task { @MainActor in completion?() }
             }
         } else if let asyncRefreshAction = asyncRefreshAction {
             Task {
                 await asyncRefreshAction()
-                await MainActor.run {
-                    $isRefreshing.wrappedValue = false
-                    completion?()
-                }
+                await MainActor.run { completion?() }
             }
         }
     }

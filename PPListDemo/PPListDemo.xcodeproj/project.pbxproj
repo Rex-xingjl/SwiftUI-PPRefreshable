@@ -11,8 +11,6 @@
 		C6054D5D29A5145C00A68271 /* PPListDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D5C29A5145C00A68271 /* PPListDemoApp.swift */; };
 		C6054D6129A5145C00A68271 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6054D6029A5145C00A68271 /* Assets.xcassets */; };
 		C6054D6429A5145C00A68271 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6054D6329A5145C00A68271 /* Preview Assets.xcassets */; };
-		C6054D7229A514B200A68271 /* PPOffsetableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6B29A514B200A68271 /* PPOffsetableScrollView.swift */; };
-		C6054D7329A514B200A68271 /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6C29A514B200A68271 /* PullToRefresh.swift */; };
 		C6054D7429A514B200A68271 /* PPRefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */; };
 		C6054D7529A514B200A68271 /* PPLottieImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6E29A514B200A68271 /* PPLottieImageView.swift */; };
 		C6054D7629A514B200A68271 /* PPRefreshHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6054D6F29A514B200A68271 /* PPRefreshHeader.swift */; };
@@ -30,8 +28,6 @@
 		C6054D5C29A5145C00A68271 /* PPListDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPListDemoApp.swift; sourceTree = "<group>"; };
 		C6054D6029A5145C00A68271 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C6054D6329A5145C00A68271 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		C6054D6B29A514B200A68271 /* PPOffsetableScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPOffsetableScrollView.swift; sourceTree = "<group>"; };
-		C6054D6C29A514B200A68271 /* PullToRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PullToRefresh.swift; sourceTree = "<group>"; };
 		C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPRefreshableScrollView.swift; sourceTree = "<group>"; };
 		C6054D6E29A514B200A68271 /* PPLottieImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPLottieImageView.swift; sourceTree = "<group>"; };
 		C6054D6F29A514B200A68271 /* PPRefreshHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPRefreshHeader.swift; sourceTree = "<group>"; };
@@ -112,8 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				C6DBE28C2A0CAFEE00A9DD67 /* PPRefreshable.swift */,
-				C6054D6B29A514B200A68271 /* PPOffsetableScrollView.swift */,
-				C6054D6C29A514B200A68271 /* PullToRefresh.swift */,
 				C6054D6D29A514B200A68271 /* PPRefreshableScrollView.swift */,
 				C6054D6E29A514B200A68271 /* PPLottieImageView.swift */,
 				C6054D6F29A514B200A68271 /* PPRefreshHeader.swift */,
@@ -256,10 +250,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6054D7229A514B200A68271 /* PPOffsetableScrollView.swift in Sources */,
 				C6054D7529A514B200A68271 /* PPLottieImageView.swift in Sources */,
 				C6DBE28D2A0CAFEE00A9DD67 /* PPRefreshable.swift in Sources */,
-				C6054D7329A514B200A68271 /* PullToRefresh.swift in Sources */,
 				C6054D7E29A514C000A68271 /* ListModel.swift in Sources */,
 				C6054D7829A514B200A68271 /* PPList.swift in Sources */,
 				C6054D7429A514B200A68271 /* PPRefreshableScrollView.swift in Sources */,
@@ -393,10 +385,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PPListDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = DHWH32NQDL;
+				DEVELOPMENT_TEAM = 8YW5P58MTF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -412,6 +405,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rex.PPListDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -424,10 +418,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PPListDemo/Preview Content\"";
-				DEVELOPMENT_TEAM = DHWH32NQDL;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -443,6 +437,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rex.PPListDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

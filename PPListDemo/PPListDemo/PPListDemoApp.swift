@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct PPListDemoApp: App {
+    let amanager = ListManager(.async)
+    let bmanager = ListManager(.block)
 
     var body: some Scene {
         WindowGroup {
@@ -21,11 +23,10 @@ struct PPListDemoApp: App {
     
     var asyncView: some View {
         NavigationView {
-            ListView(manager: ListManager(.async))
+            ListView(manager: amanager)
                 .navigationTitle("AsyncList")
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .introspectNavigationController { setNaviBar(by: $0) }
         .tabItem {
             Image(systemName: "a.circle")
             Text(verbatim: "List")
@@ -34,11 +35,10 @@ struct PPListDemoApp: App {
     
     var blockView: some View {
         NavigationView {
-            ListView(manager: ListManager(.block))
+            ListView(manager: bmanager)
                 .navigationTitle("BlockList")
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .introspectNavigationController { setNaviBar(by: $0) }
         .tabItem {
             Image(systemName: "b.circle")
             Text(verbatim: "List")

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import Introspect
 
 /// 带头部刷新的List
 
@@ -42,15 +41,6 @@ public struct PPList<Content>: View where Content: View {
     }
     
     public var body: some View {
-        if #available(iOS 14.0, *) {
-            listBody
-        } else {
-            listBody_iOS13
-        }
-    }
-    
-    @available(iOS 14.0, *)
-    @ViewBuilder var listBody: some View {
         if let refreshAction = refreshAction {
             LazyVStack(spacing: .zero) {
                 fixStutter()
@@ -64,30 +54,6 @@ public struct PPList<Content>: View where Content: View {
                 content()
             }.pp_refreshable($isRefreshing) {
                 await asyncRefreshAction?()
-            }
-        }
-    }
-    
-    var listBody_iOS13: some View {
-        List {
-            content().listRowInsets(EdgeInsets())
-        }
-        .listStyle(.plain)
-        .introspectTableView { table in
-            if #available(iOS 15, *) { table.sectionHeaderTopPadding = 0 }
-            table.separatorStyle = .none
-            table.tableFooterView = UIView()
-        }
-        .pullToRefresh(isShowing: $isRefreshing) {
-            if let refreshAction = refreshAction {
-                refreshAction {
-                    Task { @MainActor in $isRefreshing.wrappedValue = false }
-                }
-            } else if let asyncRefreshAction = asyncRefreshAction {
-                Task {
-                    await asyncRefreshAction()
-                    await MainActor.run { $isRefreshing.wrappedValue = false }
-                }
             }
         }
     }
