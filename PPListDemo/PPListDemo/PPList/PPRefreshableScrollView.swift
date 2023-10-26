@@ -71,11 +71,13 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
             /// ScrollView无法修改spacing content与GeometryReader存在默认间距8 所以这里增加VStack
             VStack(spacing: 0) {
                 GeometryReader { proxy in
-                    contentBody.preference(
+                    Color.clear.preference(
                         key: PPOffsetPreferenceKey.self,
                         value: proxy.frame(in: .named(PPOffsetSpaceName)).origin
                     )
-                }
+                }.frame(width: 0.1, height: 0.1)
+                
+                contentBody
             }
         }
         .ignoresSafeArea(.keyboard) /// 忽视其他界面弹起键盘导致的底部异常高度问题
