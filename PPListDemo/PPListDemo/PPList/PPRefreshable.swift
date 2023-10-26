@@ -17,7 +17,7 @@ public extension View {
     /// - Parameter refreshAction: 刷新方法 结束后回调block
     @ViewBuilder func pp_refreshable(_ isRefreshing: Binding<Bool>, showsIndicators: Bool = true, refreshAction: @escaping (RefreshCompleted?) -> Void) -> some View {
         modifier(PPRefreshable(isRefreshing: isRefreshing, showsIndicators: showsIndicators, progress: { state in
-            PPRefreshHeader(play: .constant(state != .finishing))
+            PPRefreshHeader(play: .constant(state.animating))
                 .frame(height: defaultRefreshThreshold)
         }, refreshAction: refreshAction))
     }

@@ -68,16 +68,25 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
     
     public var body: some View {
         ScrollView(.vertical, showsIndicators: showsIndicators) {
-            /// ScrollView无法修改spacing content与GeometryReader存在默认间距8 所以这里增加VStack
             VStack(spacing: 0) {
+                /// ScrollView无法修改spacing content与GeometryReader存在默认间距8 所以这里增加VStack
                 GeometryReader { proxy in
                     Color.clear.preference(
                         key: PPOffsetPreferenceKey.self,
                         value: proxy.frame(in: .named(PPOffsetSpaceName)).origin
                     )
-                }.frame(width: 0.1, height: 0.1)
+                }
+                .frame(width: 0.1, height: 0.1)
                 
-                contentBody
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(loadingViewBackgroundColor)
+                        .frame(height: threshold)
+                    progress(state)
+                }
+                .padding(.top, state.showRefreshView ? -max(0, offset) : -threshold)
+               
+                content()
             }
         }
         .ignoresSafeArea(.keyboard) /// 忽视其他界面弹起键盘导致的底部异常高度问题
@@ -85,20 +94,7 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         .onPreferenceChange(PPOffsetPreferenceKey.self) { offsetChange($0) }
         .onChange(of: isRefreshing) { if $0 { refreshStart() } }
     }
-
-    public var contentBody: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                Rectangle()
-                    .foregroundColor(loadingViewBackgroundColor)
-                    .frame(height: threshold)
-                progress(state)
-            }
-            content()
-        }
-        .padding(.top, state.showRefreshView ? -max(0, offset) : -threshold)
-    }
-    
+   
     private func offsetChange(_ off: CGPoint) {
         /// 这里需要主线程回传 规避一些线程异常情况
         Task { @MainActor in
