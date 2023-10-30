@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+public typealias RefreshCompleted = () -> Void
+
 @available(iOS 14.0, *)
 public extension View {
     
@@ -19,18 +21,22 @@ public extension View {
         modifier(PPRefreshable(isRefreshing: isRefreshing, showsIndicators: showsIndicators, progress: { state in
             PPRefreshHeader(play: .constant(state.animating))
                 .frame(height: defaultRefreshThreshold)
-        }, refreshAction: refreshAction))
+        }, refreshAction: {
+            await withCheckedContinuation { continuation in
+                refreshAction { continuation.resume() }
+            }
+        }))
     }
     
     /// [async方式]对视图增加头部刷新
     /// - Parameter isRefreshing: 绑定当前刷新状态值
     /// - Parameter showsIndicators: 是否展示ScrollView的指示器
     /// - Parameter refreshAction: 刷新方法 结束后回调block
-    @ViewBuilder func pp_refreshable(_ isRefreshing: Binding<Bool>, showsIndicators: Bool = true, asyncRefreshAction: @escaping @Sendable () async -> Void) -> some View {
+    @ViewBuilder func pp_refreshable(_ isRefreshing: Binding<Bool>, showsIndicators: Bool = true, refreshAction: @escaping @Sendable () async -> Void) -> some View {
         modifier(PPRefreshable(isRefreshing: isRefreshing, showsIndicators: showsIndicators, progress: { state in
             PPRefreshHeader(play: .constant(state.animating))
                 .frame(height: defaultRefreshThreshold)
-        }, asyncRefreshAction: asyncRefreshAction))
+        }, refreshAction: refreshAction))
     }
 }
 
@@ -41,28 +47,18 @@ public struct PPRefreshable<Progress>: ViewModifier where Progress: View {
     @Binding private var isRefreshing: Bool
     private let showsIndicators: Bool
     private let progress: PPRefreshProgressBuilder<Progress>
+    private var refreshAction: (@Sendable () async -> Void)?
     
-    private var refreshAction: ((RefreshCompleted?) -> Void)?
-    private var asyncRefreshAction: (@Sendable () async -> Void)?
-    
-    public init(isRefreshing: Binding<Bool>, showsIndicators: Bool, @ViewBuilder progress: @escaping PPRefreshProgressBuilder<Progress>, refreshAction: @escaping (RefreshCompleted?) -> Void) {
+    public init(isRefreshing: Binding<Bool>, showsIndicators: Bool = true, @ViewBuilder progress: @escaping PPRefreshProgressBuilder<Progress>, refreshAction: @escaping @Sendable () async -> Void) {
         _isRefreshing = isRefreshing
         self.showsIndicators = showsIndicators
         self.progress = progress
         self.refreshAction = refreshAction
     }
-    
-    public init(isRefreshing: Binding<Bool>, showsIndicators: Bool = true, @ViewBuilder progress: @escaping PPRefreshProgressBuilder<Progress>, asyncRefreshAction: @escaping @Sendable () async -> Void) {
-        _isRefreshing = isRefreshing
-        self.showsIndicators = showsIndicators
-        self.progress = progress
-        self.asyncRefreshAction = asyncRefreshAction
-    }
 
     public func body(content: Content) -> some View {
-        PPRefreshableScrollView($isRefreshing, showsIndicators: showsIndicators, loadingViewBackgroundColor: .clear, threshold: defaultRefreshThreshold) { completion in
-            guard !isRefreshing else { completion(); return }
-            refreshHandler(completion)
+        PPRefreshableScrollView($isRefreshing, showsIndicators: showsIndicators, loadingViewBackgroundColor: .clear, threshold: defaultRefreshThreshold) {
+            await refreshAction?()
         } progress: { state in
             progress(state)
         } content: {
@@ -70,18 +66,4 @@ public struct PPRefreshable<Progress>: ViewModifier where Progress: View {
         }
     }
     
-    private func refreshHandler(_ completion: RefreshCompleted?) {
-        feedback.impactOccurred()
-        
-        if let refreshAction = refreshAction {
-            refreshAction {
-                Task { @MainActor in completion?() }
-            }
-        } else if let asyncRefreshAction = asyncRefreshAction {
-            Task {
-                await asyncRefreshAction()
-                await MainActor.run { completion?() }
-            }
-        }
-    }
 }
