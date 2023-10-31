@@ -72,8 +72,8 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
     public var body: some View {
         ScrollView(.vertical, showsIndicators: showsIndicators) {
             ZStack {
+                /// ScrollView无法修改spacing content与GeometryReader存在默认间距8 所以这里增加VStack
                 VStack(spacing: 0) {
-                    /// ScrollView无法修改spacing content与GeometryReader存在默认间距8 所以这里增加VStack
                     GeometryReader { proxy in
                         Color.clear.preference(
                             key: PPOffsetPreferenceKey.self,
@@ -85,17 +85,7 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
                     Spacer()
                 }
                 
-                VStack(spacing: 0) {
-                    ZStack {
-                        Rectangle()
-                            .foregroundColor(loadingViewBackgroundColor)
-                            .frame(height: threshold)
-                        progress(state)
-                    }
-                    .padding(.top, state.holdRefreshView ? 0 : offset-threshold)
-                    
-                    content()
-                }
+                contentBody
             }
         }
         .ignoresSafeArea(.keyboard) /// 忽视其他界面弹起键盘导致的底部异常高度问题
@@ -113,18 +103,57 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         }
     }
     
+    @ViewBuilder var normalContentBody: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(loadingViewBackgroundColor)
+                    .frame(height: threshold)
+                progress(state)
+            }
+            .padding(.top, state.holdRefreshView ? 0 : offset-threshold)
+            
+            content()
+        }
+    }
+    
+    @ViewBuilder var specialContentBody: some View {
+        ZStack(alignment: .top) {
+            ZStack {
+                Rectangle()
+                    .foregroundColor(loadingViewBackgroundColor)
+                    .frame(height: threshold)
+                progress(state)
+            }
+            .offset(y: state.holdRefreshView ? -max(0, offset) : -threshold)
+            
+            content()
+                .alignmentGuide(.top) { _ in state.holdRefreshView ? -threshold + max(0, offset) : 0 }
+        }
+    }
+    
+    @ViewBuilder private var contentBody: some View {
+        if #available(iOS 17.1, *) {
+            normalContentBody
+        } else if #available(iOS 17.0, *) { // iOS 17.0.x 版本存在异常
+            specialContentBody
+        } else {
+            normalContentBody
+        }
+    }
+    
     private func offsetChange(_ off: CGPoint) {
         Task { @MainActor in
             /// 在某些机型上 将Y直接设置给offset会造成SwiftUI循环刷新 这里尝试了很多次 确定为现在的逻辑
             let Y = off.y
             if Y > threshold && state == .waiting {
-                offset = Y
                 state = .primed
-            } else if Y <= threshold && state == .primed {
                 offset = Y
+            } else if Y <= threshold && state == .primed {
                 isRefreshing = true
+                offset = Y
             } else {
-                /// iOS14会出现异常: Bound preference PPOffsetPreferenceKey tried to update multiple times per frame.
+                /// iOS14 会出现异常: Bound preference PPOffsetPreferenceKey tried to update multiple times per frame.
                 if #available(iOS 15, *) { offset = Y }
             }
         }
@@ -142,6 +171,10 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         /// Delay of 1 seconds
         try? await Task.sleep(nanoseconds: 1_000_000_000)
         isRefreshing = false
+        
+        /// iOS14 会出现异常: Bound preference PPOffsetPreferenceKey tried to update multiple times per frame.
+        if #available(iOS 15, *) {  }
+        else { offset = 0 }
     }
     
 }
