@@ -88,6 +88,7 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
                 contentBody
             }
         }
+        .clipped()
         .ignoresSafeArea(.keyboard) /// 忽视其他界面弹起键盘导致的底部异常高度问题
         .coordinateSpace(name: PPOffsetSpaceName)
         .onPreferenceChange(PPOffsetPreferenceKey.self) { offsetChange($0) }
