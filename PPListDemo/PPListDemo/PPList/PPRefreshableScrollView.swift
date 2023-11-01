@@ -103,35 +103,6 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         }
     }
     
-    @ViewBuilder var normalContentBody: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                Rectangle()
-                    .foregroundColor(loadingViewBackgroundColor)
-                    .frame(height: threshold)
-                progress(state)
-            }
-            .padding(.top, state.holdRefreshView ? 0 : offset-threshold)
-            
-            content()
-        }
-    }
-    
-    @ViewBuilder var specialContentBody: some View {
-        ZStack(alignment: .top) {
-            ZStack {
-                Rectangle()
-                    .foregroundColor(loadingViewBackgroundColor)
-                    .frame(height: threshold)
-                progress(state)
-            }
-            .offset(y: state.holdRefreshView ? -max(0, offset) : -threshold)
-            
-            content()
-                .alignmentGuide(.top) { _ in state.holdRefreshView ? -threshold + max(0, offset) : 0 }
-        }
-    }
-    
     @ViewBuilder private var contentBody: some View {
         if #available(iOS 17.1, *) {
             normalContentBody
@@ -142,6 +113,34 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         }
     }
     
+    @ViewBuilder private var normalContentBody: some View {
+        VStack(spacing: 0) {
+            refreshHeader
+                .padding(.top, state.holdRefreshView ? 0 : offset-threshold)
+            
+            content()
+        }
+    }
+    
+    @ViewBuilder private var specialContentBody: some View {
+        ZStack(alignment: .top) {
+            refreshHeader
+                .offset(y: state.holdRefreshView ? -max(0, offset) : -threshold)
+            
+            content()
+                .alignmentGuide(.top) { _ in state.holdRefreshView ? -threshold + max(0, offset) : 0 }
+        }
+    }
+    
+    private var refreshHeader: some View {
+        ZStack {
+            Rectangle()
+                .foregroundColor(loadingViewBackgroundColor)
+                .frame(height: threshold)
+            progress(state)
+        }
+    }
+
     private func offsetChange(_ off: CGPoint) {
         Task { @MainActor in
             /// 在某些机型上 将Y直接设置给offset会造成SwiftUI循环刷新 这里尝试了很多次 确定为现在的逻辑
