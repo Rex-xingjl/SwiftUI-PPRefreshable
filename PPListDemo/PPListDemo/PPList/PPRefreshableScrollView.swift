@@ -49,7 +49,6 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
     let refreshAction: @Sendable () async -> Void
     
     @Binding private var isRefreshing: Bool
-    @State private var isRefreshEnding: Bool = false
     @State private var offset: CGFloat = 0
     @State private var state: RefreshState = .waiting // the current state
     
@@ -92,56 +91,50 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         .ignoresSafeArea(.keyboard) /// 忽视其他界面弹起键盘导致的底部异常高度问题
         .coordinateSpace(name: PPOffsetSpaceName)
         .onPreferenceChange(PPOffsetPreferenceKey.self) { offsetChange($0) }
-        .onChange(of: state) { value in
-            Task { @MainActor in
-                if value == .loading { await refreshProcess() }
-            }
-        }
-        .onChange(of: isRefreshing) { value in
-            Task { @MainActor in
-                withAnimation(.smooth) { state = value ? .loading : .waiting }
-            }
-        }
+        .onChange(of: isRefreshing) { refreshChange($0) } /// 接收[内部]或来自[外部]的修改
     }
     
     @ViewBuilder private var contentBody: some View {
         if #available(iOS 17.1, *) {
             normalContentBody
-        } else if #available(iOS 17.0, *) { // iOS 17.0.x 版本存在异常
+        } else if #available(iOS 17.0, *) {
             specialContentBody
         } else {
             normalContentBody
         }
     }
     
-    @ViewBuilder private var normalContentBody: some View {
+    @ViewBuilder var normalContentBody: some View {
         VStack(spacing: 0) {
-            refreshHeader
-                .padding(.top, state.holdRefreshView ? 0 : offset-threshold)
+            ZStack {
+                Rectangle()
+                    .foregroundColor(loadingViewBackgroundColor)
+                    .frame(height: threshold)
+                progress(state)
+            }
+            .padding(.top, state.holdRefreshView ? 0 : offset-threshold)
             
             content()
         }
     }
     
-    @ViewBuilder private var specialContentBody: some View {
+    @ViewBuilder var specialContentBody: some View {
         ZStack(alignment: .top) {
-            refreshHeader
-                .offset(y: state.holdRefreshView ? -max(0, offset) : -threshold)
+            ZStack {
+                Rectangle()
+                    .foregroundColor(loadingViewBackgroundColor)
+                    .frame(height: threshold)
+                progress(state)
+            }
+            .offset(y: state.holdRefreshView ? -max(0, offset) : -threshold)
             
             content()
                 .alignmentGuide(.top) { _ in state.holdRefreshView ? -threshold + max(0, offset) : 0 }
         }
     }
     
-    private var refreshHeader: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(loadingViewBackgroundColor)
-                .frame(height: threshold)
-            progress(state)
-        }
-    }
-
+    // MARK: - Action
+    
     private func offsetChange(_ off: CGPoint) {
         Task { @MainActor in
             /// 在某些机型上 将Y直接设置给offset会造成SwiftUI循环刷新 这里尝试了很多次 确定为现在的逻辑
@@ -159,6 +152,13 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
         }
     }
     
+    private func refreshChange(_ value: Bool) {
+        Task { @MainActor in
+            withAnimation(.smooth) { state = value ? .loading : .waiting }
+            if value  { await refreshProcess() }
+        }
+    }
+    
     @MainActor private func refreshProcess() async {
         await refreshAction()
         await refreshEnd()
@@ -167,7 +167,7 @@ public struct PPRefreshableScrollView<Progress, Content>: View where Progress: V
     @MainActor private func refreshEnd() async {
         /// Delay of 0.35 seconds (1 second = 1_000_000_000 nanoseconds)
         try? await Task.sleep(nanoseconds: 350_000_000)
-        self.state = .finishing
+        state = .finishing
         /// Delay of 1 seconds
         try? await Task.sleep(nanoseconds: 1_000_000_000)
         isRefreshing = false

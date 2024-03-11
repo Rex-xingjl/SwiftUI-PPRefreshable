@@ -86,7 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				C6054D6A29A514B200A68271 /* PPList */,
-				C698B4E829A5F0690016FCD7 /* FileList */,
+				C698B4E829A5F0690016FCD7 /* UI */,
 				C6054D5C29A5145C00A68271 /* PPListDemoApp.swift */,
 				C6054D6029A5145C00A68271 /* Assets.xcassets */,
 				C698B4E629A5F0210016FCD7 /* header_loading.json */,
@@ -116,14 +116,14 @@
 			path = PPList;
 			sourceTree = "<group>";
 		};
-		C698B4E829A5F0690016FCD7 /* FileList */ = {
+		C698B4E829A5F0690016FCD7 /* UI */ = {
 			isa = PBXGroup;
 			children = (
 				C6054D7A29A514C000A68271 /* ListManager.swift */,
 				C6054D7B29A514C000A68271 /* ListModel.swift */,
 				C6054D7929A514C000A68271 /* ListView.swift */,
 			);
-			path = FileList;
+			path = UI;
 			sourceTree = "<group>";
 		};
 		D84EBA9DC41360F8AC5AF48B /* Frameworks */ = {
